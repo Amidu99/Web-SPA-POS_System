@@ -416,3 +416,23 @@ function getOrderDetailsToTemp(order_id) {
     }
 }
 
+// search orders
+$('#order_search_box').on('input', () => {
+    let search_term = $('#order_search_box').val();
+    if(search_term){
+        $('#order_search_tbl_body').empty();
+        let results = order_db.filter((order) => order.order_id.toLowerCase().startsWith(search_term.toLowerCase()) ||
+        order.customer_id.toLowerCase().startsWith(search_term.toLowerCase()));
+        results.map((order, index) => {
+            let record = `<tr>
+                <td class="order_id">${order.order_id}</td>
+                <td class="date">${order.date}</td>
+                <td class="customer_id">${order.customer_id}</td>
+                <td class="order_total">${order.total}</td>
+            </tr>`;
+            $("#order_search_tbl_body").append(record);
+        });
+    }else{
+        $('#order_search_tbl_body').empty();
+    }
+});
