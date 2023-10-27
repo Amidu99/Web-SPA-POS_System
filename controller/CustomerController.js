@@ -115,3 +115,16 @@ $("#customer_btns>button[type='button']").eq(3).on("click", () => {
     }
 });
 
+// retrieve by table click
+$("#customer_tbl_body, #customer_search_tbl_body").on("click", "tr", function() {
+    row_index = $(this).index();
+    let customer_id = $(this).find(".customer_id").text();
+    let name = $(this).find(".name").text();
+    let address = $(this).find(".address").text();
+    let salary = $(this).find(".salary").text();
+    $("#customer_id").val(customer_id);
+    $("#customer_name").val(name);
+    $("#customer_address").val(address);
+    $("#customer_salary").val(salary);
+});
+
