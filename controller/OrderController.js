@@ -231,3 +231,20 @@ $("#item_select").on("change", function() {
         $("#cart_btns>button[type='reset']").eq(0).click();
     }
 });
+
+function updateItemQuantities() {
+    for (let i = 0; i < temp_cart_db.length; i++) {
+        let itemCode = temp_cart_db[i].item_code;
+        let get_qty = temp_cart_db[i].get_qty;
+        let item_data = item_db.find(item => item.item_code === itemCode);
+        if (item_data) {
+            let description = item_data.description;
+            let unit_price = item_data.unit_price;
+            let qty_on_hand = item_data.qty_on_hand;
+            let updated_qty = qty_on_hand - get_qty;
+            let item_obj = new Item(itemCode, description, unit_price, updated_qty);
+            let index = item_db.findIndex(item => item.item_code === itemCode);
+            item_db[index] = item_obj;
+        }
+    }
+}
