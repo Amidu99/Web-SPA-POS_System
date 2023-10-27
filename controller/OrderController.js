@@ -50,3 +50,63 @@ function isAvailableCode(order_id, item_code) {
     return !!order_detail;
 }
 
+function generateNextId() {
+    order_db.sort((a, b) => a.order_id.localeCompare(b.order_id));
+    if (order_db.length === 0) { return "O-0001"; }
+    const last = order_db[order_db.length - 1];
+    const lastIdNumber = parseInt(last.order_id.slice(2), 10);
+    const nextIdNumber = lastIdNumber + 1;
+    return `O-${nextIdNumber.toString().padStart(4, '0')}`;
+}
+
+const loadCustomers = () => {
+    let title = $('<option>', { text: '-Set Customer-', value: 'title' });
+    $("#customer_select").append(title);
+    customer_db.map((customer, index) => {
+        let option = $('<option>', { text: customer.customer_id, value: customer.customer_id });
+        $("#customer_select").append(option);
+    });
+};
+
+const loadItems = () => {
+    let title = $('<option>', { text: '-Select Item-', value: 'title' });
+    $("#item_select").append(title);
+    item_db.map((item, index) => {
+        let option = $('<option>', { text: item.item_code, value: item.item_code });
+        $("#item_select").append(option);
+    });
+};
+
+// load cart table
+const loadCartItemData = () => {
+    $('#order_item_tbl_body').empty();
+    temp_cart_db.map((cartItemData, index) => {
+        let unitPrice = parseFloat(cartItemData.unit_price);
+        let quantity = parseInt(cartItemData.get_qty);
+        let total = unitPrice * quantity;
+        let record = `<tr>
+                        <td class="item_code">${cartItemData.item_code}</td>
+                        <td class="description">${cartItemData.description}</td>
+                        <td class="unit_price">${unitPrice}</td>
+                        <td class="get_qty">${quantity}</td>
+                        <td class="item_total">${total}</td>
+                      </tr>`;
+        $("#order_item_tbl_body").append(record);
+    });
+};
+
+// load order table
+const loadOrderData = () => {
+    $('#order_tbl_body').empty();
+    order_db.map((order, index) => {
+        let record = `<tr>
+                        <td class="order_id">${order.order_id}</td>
+                        <td class="date">${order.date}</td>
+                        <td class="customer_id">${order.customer_id}</td>
+                        <td class="discount">${order.discount}</td>
+                        <td class="order_total">${order.total}</td>
+                      </tr>`;
+        $("#order_tbl_body").append(record);
+    });
+};
+
