@@ -76,3 +76,25 @@ $("#customer_btns>button[type='button']").eq(1).on("click", () => {
     }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// delete customer
+$("#customer_btns>button[type='button']").eq(2).on("click", () => {
+    let customer_id = $("#customer_id").val();
+    if(customer_id){
+        if (customerIdPattern.test(customer_id)) {
+            if(isAvailableID(customer_id)) {
+                Swal.fire({width: '300px', title: 'Delete Customer', text: "Are you sure you want to permanently remove this customer?", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'Yes, delete!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let index = customer_db.findIndex(customer => customer.customer_id === customer_id);
+                        customer_db.splice(index, 1);
+                        $("#customer_btns>button[type='button']").eq(3).click();
+                        loadCustomerData();
+                        Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
+                    }
+                });
+            } else { toastr.error('This ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid customer ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    }else{ toastr.error('Customer ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
