@@ -110,3 +110,12 @@ const loadOrderData = () => {
     });
 };
 
+$("#order_btns>button[type='button']").eq(2).on("click", () => {
+    $('#customer_select').empty();
+    loadCustomers();
+    clear_form1();
+    clear_form3();
+    temp_cart_db = [];
+    loadCartItemData();
+});
+
