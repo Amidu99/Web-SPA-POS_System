@@ -98,3 +98,20 @@ $("#customer_btns>button[type='button']").eq(2).on("click", () => {
     }else{ toastr.error('Customer ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// reset form
+$("#customer_btns>button[type='button']").eq(3).on("click", () => {
+    $("#customer_name").val("");
+    $("#customer_address").val("");
+    $("#customer_salary").val("");
+    $('#customer_search_tbl_body').empty();
+    customer_db.sort((a, b) => a.customer_id.localeCompare(b.customer_id));
+    if (customer_db.length === 0) { $("#customer_id").val("C-0001"); }
+    else{
+        const last = customer_db[customer_db.length - 1];
+        const lastIdNumber = parseInt(last.customer_id.slice(2), 10);
+        const nextIdNumber = lastIdNumber + 1;
+        const nextId = `C-${nextIdNumber.toString().padStart(4, '0')}`;
+        $("#customer_id").val(nextId);
+    }
+});
+
