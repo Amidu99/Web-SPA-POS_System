@@ -98,3 +98,20 @@ $("#item_btns>button[type='button']").eq(2).on("click", () => {
     } else { toastr.error('Item Code can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// reset form
+$("#item_btns>button[type='button']").eq(3).on("click", () => {
+    loadItemData();
+    $("#description").val("");
+    $("#unit_price").val("");
+    $("#item_qty").val("");
+    item_db.sort((a, b) => a.item_code.localeCompare(b.item_code));
+    if (item_db.length === 0) { $("#item_code").val("I-0001"); }
+    else{
+        const last = item_db[item_db.length - 1];
+        const lastIdNumber = parseInt(last.item_code.slice(2), 10);
+        const nextIdNumber = lastIdNumber + 1;
+        const nextId = `I-${nextIdNumber.toString().padStart(4, '0')}`;
+        $("#item_code").val(nextId);
+    }
+});
+
