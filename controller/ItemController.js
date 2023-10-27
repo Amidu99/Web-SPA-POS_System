@@ -127,3 +127,24 @@ $("#item_tbl_body, #item_search_tbl_body").on("click", "tr", function() {
     $("#unit_price").val(unit_price);
     $("#item_qty").val(qty_on_hand);
 });
+
+// search items
+$('#item_search_box').on('input', () => {
+    let search_term = $('#item_search_box').val();
+    if(search_term){
+        $('#item_search_tbl_body').empty();
+        let results = item_db.filter((item) =>
+            item.item_code.toLowerCase().startsWith(search_term.toLowerCase()) ||
+            item.description.toLowerCase().startsWith(search_term.toLowerCase()));
+            results.map((item, index) => {
+            let record = `<tr><td class="item_code">${item.item_code}</td><td class="description">${item.description}</td>
+                      <td class="unit_price">${item.unit_price}</td><td class="qty_on_hand">${item.qty_on_hand}</td></tr>`;
+            $("#item_search_tbl_body").append(record);
+        });
+    }else{
+        $('#item_search_tbl_body').empty();
+    }
+});
+
+
+// v1 finalize
