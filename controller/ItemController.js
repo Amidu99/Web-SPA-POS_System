@@ -76,3 +76,25 @@ $("#item_btns>button[type='button']").eq(1).on("click", () => {
     } else { toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// delete item
+$("#item_btns>button[type='button']").eq(2).on("click", () => {
+    let item_code = $("#item_code").val();
+    if(item_code){
+        if (itemCodePattern.test(item_code)) {
+            if(isAvailableID(item_code)) {
+                Swal.fire({width: '300px', title: 'Delete Item', text: "Are you sure you want to permanently remove this item?", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'Yes, delete!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let index = item_db.findIndex(item => item.item_code === item_code);
+                        item_db.splice(index, 1);
+                        $("#item_btns>button[type='button']").eq(3).click();
+                        loadItemData();
+                        Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
+                    }
+                })
+            } else { toastr.error('This Code is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid item code format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    } else { toastr.error('Item Code can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
