@@ -119,3 +119,42 @@ $("#order_btns>button[type='button']").eq(2).on("click", () => {
     loadCartItemData();
 });
 
+// add item to cart
+$("#cart_btns>button[type='button']").eq(0).on("click", () => {
+    let order_id = $("#order_id").val();
+    let order_item_code = $("#order_item_code").val();
+    let order_item_description = $("#order_item_description").val();
+    let total_item_qty = $("#total_item_qty").val();
+    let order_item_unit_price = $("#order_item_unit_price").val();
+    let order_get_item_qty = $("#order_get_item_qty").val();
+    if(order_id){
+        if (orderIdPattern.test(order_id)) {
+            if (order_item_code && order_get_item_qty) {
+                if(parseInt(order_get_item_qty)<=parseInt(total_item_qty) && parseInt(order_get_item_qty)>0) {
+                    if(isAvailableCode(order_id, order_item_code)) {
+                        let order_detail = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                        let remove_index = temp_cart_db.findIndex(item => item.order_id === order_id && item.item_code === order_item_code);
+                        let inCart_count = parseInt(order_detail.get_qty);
+                        let new_count = inCart_count + parseInt(order_get_item_qty);
+                        temp_cart_db.splice(remove_index,1);
+                        let cart_item_obj = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
+                        temp_cart_db.push(cart_item_obj);
+                        sub_total -= (order_item_unit_price * inCart_count);
+                        sub_total += order_item_unit_price * new_count;
+                        document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
+                        $("#cart_btns>button[type='reset']").click();
+                        loadCartItemData();
+                    } else {
+                        let cart_item_obj = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, order_get_item_qty);
+                        temp_cart_db.push(cart_item_obj);
+                        sub_total += order_item_unit_price * order_get_item_qty;
+                        document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
+                        $("#cart_btns>button[type='reset']").click();
+                        loadCartItemData();
+                    }
+                } else { toastr.error('Invalid Quantity!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
