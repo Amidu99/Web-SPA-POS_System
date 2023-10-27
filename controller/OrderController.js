@@ -297,3 +297,39 @@ $("#btn_place_order").on("click", () => {
     }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// update order
+$("#order_btns>button[type='button']").eq(0).on("click", () => {
+    let order_id = $("#order_id").val();
+    let date = $("#date").val();
+    let order_customer_id = $("#customer_select").val();
+    let order_customer_name = $("#order_customer_name").val();
+    let discount = $("#discount").val();
+    let total = sub_total - (sub_total * discount/100);
+    if(order_id){
+        if (orderIdPattern.test(order_id)) {
+            if(isAvailableID(order_id)) {
+                if (order_customer_name) {
+                    if(discountPattern.test(discount)) {
+                        if(total>0) {
+                            if(isAvailableForUpdate(order_id)) {
+                                let order_obj = new Order(order_id, date, order_customer_id, discount, total);
+                                let index = order_db.findIndex(order => order.order_id === order_id);
+                                order_db[index] = order_obj;
+                                removeOrderDetails(order_id);
+                                updateItemQuantities();
+                                addOrderDetails();
+                                $("#order_btns>button[type='button']").eq(2).click();
+                                $("#cart_btns>button[type='reset']").eq(0).click();
+                                loadOrderData();
+                                clear_form3();
+                                $('#order_item_tbl_body').empty();
+                                Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
+                            } else { toastr.error('No details to update!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                        } else { toastr.error('Invalid total!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                    } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                }else{ toastr.error('Enter valid Customer ID!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            } else { toastr.error('This Order ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
