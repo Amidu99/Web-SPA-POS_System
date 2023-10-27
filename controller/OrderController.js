@@ -333,3 +333,25 @@ $("#order_btns>button[type='button']").eq(0).on("click", () => {
     }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// delete order
+$("#order_btns>button[type='button']").eq(1).on("click", () => {
+    let order_id = $("#order_id").val();
+    if(order_id){
+        if (orderIdPattern.test(order_id)) {
+            if(isAvailableID(order_id)) {
+                Swal.fire({width: '300px', title: 'Delete Order', text: "Are you sure you want to permanently remove this order?", icon: 'warning',
+                showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'Yes, delete!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let index = order_db.findIndex(order => order.order_id === order_id);
+                        order_db.splice(index, 1);
+                        $("#order_btns>button[type='button']").eq(2).click();
+                        loadOrderData();
+                        Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
+                    }
+                })
+            } else { toastr.error('This Order ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
