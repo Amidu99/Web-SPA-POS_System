@@ -262,6 +262,26 @@ function removeOrderDetails(order_id) {
     }
 }
 
+function recoverItems(order_id) {
+    for (let i = order_details_db.length - 1; i >= 0; i--) {
+        if (order_details_db[i].order_id === order_id) {
+            let item_code = order_details_db[i].item_code;
+            let recover_qty = parseInt(order_details_db[i].get_qty);
+            let item_data = item_db.find(item => item.item_code === item_code);
+            if (item_data) {
+                let description = item_data.description;
+                let unit_price = item_data.unit_price;
+                let qty_on_hand = parseInt(item_data.qty_on_hand);
+                let updated_qty = qty_on_hand + recover_qty;
+                let item_obj = new Item(item_code, description, unit_price, updated_qty);
+                let index = item_db.findIndex(item => item.item_code === item_code);
+                item_db[index] = item_obj;
+            }
+            order_details_db.splice(i, 1);
+        }
+    }
+}
+
 // place order
 $("#btn_place_order").on("click", () => {
     let order_id = $("#order_id").val();
@@ -345,6 +365,7 @@ $("#order_btns>button[type='button']").eq(1).on("click", () => {
                     if (result.isConfirmed) {
                         let index = order_db.findIndex(order => order.order_id === order_id);
                         order_db.splice(index, 1);
+                        recoverItems(order_id);
                         $("#order_btns>button[type='button']").eq(2).click();
                         loadOrderData();
                         Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
