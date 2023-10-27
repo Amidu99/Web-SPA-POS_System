@@ -50,3 +50,29 @@ $("#item_btns>button[type='button']").eq(0).on("click", () => {
     }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// update item
+$("#item_btns>button[type='button']").eq(1).on("click", () => {
+    let item_code = $("#item_code").val();
+    let description = $("#description").val();
+    let unit_price = $("#unit_price").val();
+    let qty_on_hand = $("#item_qty").val();
+    if(item_code && description && unit_price && qty_on_hand) {
+        if (itemCodePattern.test(item_code)) {
+            if(isAvailableID(item_code)) {
+                if (descriptionPattern.test(description)) {
+                    if (pricePattern.test(unit_price)) {
+                        if (qtyPattern.test(qty_on_hand)) {
+                            let item_obj = new Item(item_code, description, unit_price, qty_on_hand);
+                            let index = item_db.findIndex(item => item.item_code === item_code);
+                            item_db[index] = item_obj;
+                            $("#item_btns>button[type='button']").eq(3).click();
+                            loadItemData();
+                            Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
+                        } else { toastr.error('Invalid quantity input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                    } else { toastr.error('Invalid price input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                } else { toastr.error('Invalid description!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            } else { toastr.error('This Code is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+        } else { toastr.error('Invalid item code format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    } else { toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
