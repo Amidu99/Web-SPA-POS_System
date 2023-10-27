@@ -355,3 +355,19 @@ $("#order_btns>button[type='button']").eq(1).on("click", () => {
     }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// discount & balance
+const inputElement = document.getElementById('discount');
+inputElement.addEventListener('input', function (event) {
+    let discount = event.target.value;
+    if(discountPattern.test(discount)){
+        let total = sub_total - (sub_total * discount/100);
+        document.getElementById("total").innerHTML = "Total : Rs. "+total;
+        let cash = $("#cash").val();
+        if(cash>total){
+            let balance = cash - total;
+            $("#balance").val(balance);
+            $("#order_total").val(total);
+        } else { Swal.fire({width: '300px', icon: 'warning', title: 'Oops...', text: 'Insufficient cash for get balance!'}); }
+    } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
