@@ -158,3 +158,44 @@ $("#cart_btns>button[type='button']").eq(0).on("click", () => {
     }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// remove item from cart
+$("#cart_btns>button[type='button']").eq(1).on("click", () => {
+    let order_id = $("#order_id").val();
+    let order_item_code = $("#order_item_code").val();
+    let order_item_description = $("#order_item_description").val();
+    let order_item_unit_price = $("#order_item_unit_price").val();
+    let order_get_item_qty = $("#order_get_item_qty").val();
+    if(order_id){
+        if (orderIdPattern.test(order_id)) {
+            if (order_item_code && order_get_item_qty) {
+                if(isAvailableCode(order_id, order_item_code)) {
+                    let cart_item_data = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                    let remove_index = temp_cart_db.findIndex(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                    if (cart_item_data) {
+                        if (order_get_item_qty === cart_item_data.get_qty) {
+                            temp_cart_db.splice(remove_index, 1);
+                            sub_total -= order_item_unit_price * order_get_item_qty;
+                            document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
+                            $("#cart_btns>button[type='reset']").click();
+                            loadCartItemData();
+                        } else if(order_get_item_qty < cart_item_data.get_qty && order_get_item_qty > 0){
+                            let inCart_count = parseInt(cart_item_data.get_qty);
+                            let new_count = inCart_count - parseInt(order_get_item_qty);
+                            temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
+                            sub_total -= (order_item_unit_price * inCart_count);
+                            sub_total += order_item_unit_price * new_count;
+                            document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
+                            $("#cart_btns>button[type='reset']").click();
+                            loadCartItemData();
+                        } else { toastr.error('Invalid Quantity!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"}); }
+                    } else { toastr.error('This item is not available to remove!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                } else { toastr.error('This Item is not available in this order!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"}); }
+        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+});
+
+$("#cart_btns>button[type='reset']").eq(0).on("click", () => {
+    $('#item_select').empty();
+    loadItems();
+});
