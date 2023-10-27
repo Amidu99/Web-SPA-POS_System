@@ -31,3 +31,22 @@ const clear_form3 = () => {
     document.getElementById("total").innerHTML = "Total : Rs. 0.00";
     document.getElementById("subTotal").innerHTML = "SubTotal : Rs. 0.00";
 }
+
+$("#order_id").on('keypress' , ()=> { $("#customer_select").focus(); });
+$("#cash").on('keypress' , ()=> { $("#discount").focus(); });
+
+function isAvailableID(order_id) {
+    let order = order_db.find(order => order.order_id === order_id);
+    return !!order;
+}
+
+function isAvailableForUpdate(order_id) {
+    let order_detail = temp_cart_db.find(order_detail => order_detail.order_id === order_id);
+    return !!order_detail;
+}
+
+function isAvailableCode(order_id, item_code) {
+    let order_detail = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === item_code);
+    return !!order_detail;
+}
+
