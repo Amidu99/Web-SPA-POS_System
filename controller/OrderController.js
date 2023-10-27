@@ -371,3 +371,48 @@ inputElement.addEventListener('input', function (event) {
     } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
 });
 
+// retrieve by table click
+$("#order_item_tbl_body").on("click", "tr", function() {
+    item_row_index = $(this).index();
+    let item_id = $(this).find(".item_code").text();
+    let description = $(this).find(".description").text();
+    let unit_price = $(this).find(".unit_price").text();
+    let get_qty = $(this).find(".get_qty").text();
+    $("#order_item_code").val(item_id);
+    $("#order_item_description").val(description);
+    $("#order_item_unit_price").val(unit_price);
+    $("#order_get_item_qty").val(get_qty);
+});
+
+$("#order_tbl_body, #order_search_tbl_body").on("click", "tr", function() {
+    order_row_index = $(this).index();
+    let order_id = $(this).find(".order_id").text();
+    let date = $(this).find(".date").text();
+    let customer_id = $(this).find(".customer_id").text();
+    let customer_data = customer_db.find(customer => customer.customer_id === customer_id);
+    let customer_name;
+    if (customer_data) { customer_name = customer_data.name;}
+    let discount = $(this).find(".discount").text();
+    let total = $(this).find(".order_total").text();
+    sub_total = total / (100 - discount) * 100;
+    document.getElementById("total").innerHTML = "Total : Rs. "+total;
+    document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
+    getOrderDetailsToTemp(order_id);
+    loadCartItemData();
+    $("#order_id").val(order_id);
+    $("#date").val(date);
+    $("#customer_select").val(customer_id);
+    $("#order_customer_name").val(customer_name);
+    $("#discount").val(discount);
+    $("#order_total").val(total);
+});
+
+function getOrderDetailsToTemp(order_id) {
+    temp_cart_db = [];
+    for (let i = 0; i < order_details_db.length; i++) {
+        if (order_details_db[i].order_id === order_id) {
+            temp_cart_db.push({...order_details_db[i]});
+        }
+    }
+}
+
