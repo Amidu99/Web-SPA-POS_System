@@ -115,3 +115,15 @@ $("#item_btns>button[type='button']").eq(3).on("click", () => {
     }
 });
 
+// retrieve by table click
+$("#item_tbl_body, #item_search_tbl_body").on("click", "tr", function() {
+    row_index = $(this).index();
+    let item_id = $(this).find(".item_code").text();
+    let description = $(this).find(".description").text();
+    let unit_price = $(this).find(".unit_price").text();
+    let qty_on_hand = $(this).find(".qty_on_hand").text();
+    $("#item_code").val(item_id);
+    $("#description").val(description);
+    $("#unit_price").val(unit_price);
+    $("#item_qty").val(qty_on_hand);
+});
