@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>POS System</title>
+    <title>POS System-A$</title>
     <link rel="icon" href="./assets/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="./assets/css/normalize.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -11,13 +11,15 @@
     <link href="./assets/css/hover_master/css/hover-min.css" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-minimal@4/minimal.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <meta name="keyword" content="pos system, pos, system, web, web system,
         web pos system, software, online,bootstrap, java, html, javascript, js, css">
     <meta name="description" content="Web POS System">
     <meta name="author" content="Amidu Shamika">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="background-color: rgba(207, 244, 252, 0.35);">
+<body>
+<!--Header-->
 <header>
     <nav class="navbar fixed-top navbar-expand-lg bg-primary ">
         <div class="container-fluid">
@@ -51,9 +53,9 @@
         <section id="welcome_section">
             <div class="card text-center" id="home">
                 <div class="card-body">
-                    <h1 class="card-title">Welcome to AA POS System</h1>
-                    <img class="hvr-pulse-shrink" id="homeImg" src="./assets/images/welcome-img.png" alt="home img" data-aos="zoom-in" data-aos-duration="2000">
-                    <p class="card-text" data-aos="zoom-in" data-aos-duration="2000">Simplifying Sales and Streamlining Business
+                    <h1 class="card-title" id="welcome">Welcome to A$ POS System</h1>
+                    <img class="hvr-pulse-shrink" id="homeImg" src="./assets/images/welcome-img1.png" alt="home img" data-aos="zoom-in" data-aos-duration="2000">
+                    <p id="intro" class="card-text" data-aos="zoom-in" data-aos-duration="2000">Simplifying Sales and Streamlining Business
                         Your all-in-one solution for smooth transactions.
                         Effortlessly manage inventory, track sales, and delight customers with our intuitive POS system.
                     </p>
@@ -88,7 +90,7 @@
 </section>
 <!--Customer Page-->
 <section id="customer_main_section">
-    <h1><i class="fa-solid fa-user-group fa-fade" style="color: #041c96;"></i> Customer Manage</h1>
+    <h1><i class="fa-solid fa-user-group fa-fade" style="color: #1C77FD;"></i> Customer Manage</h1>
     <br>
     <section id="customer_search_section">
         <div class="col-md-12 mx-auto">
@@ -172,7 +174,7 @@
 </section>
 <!--Item Page-->
 <section id="item_main_section">
-    <h1><i class="fa-solid fa-store fa-flip" style="color: #041c96;"></i> Store Manage</h1>
+    <h1><i class="fa-solid fa-store fa-flip" style="color: #1C77FD;"></i> Store Manage</h1>
     <br>
     <section id="item_search_section">
         <div class="col-md-12 mx-auto">
@@ -256,7 +258,18 @@
 </section>
 <!--Order Page-->
 <section id="order_main_section">
-    <h1><i class="fa-solid fa-cart-shopping fa-bounce" style="color: #041c96;"></i> Order Manage</h1>
+    <h1><i class="fa-solid fa-cart-shopping fa-bounce" style="color: #1C77FD;"></i> Order Manage</h1>
+    <br>
+    <section id="order_search_section">
+        <div class="col-md-12 mx-auto">
+            <input type="text" class="form-control" id="order_search_box" placeholder="Search with order/customer id..">
+            <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                <table class="table table-info table-sm table-hover table-borderless">
+                    <tbody id="order_search_tbl_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
     <br>
     <section id="order_form_set" class="row g-3">
         <section id="form1">
@@ -407,6 +420,7 @@
                     <th scope="col">Order ID</th>
                     <th scope="col">Date</th>
                     <th scope="col">Customer ID</th>
+                    <th scope="col">Discount %</th>
                     <th scope="col">Total</th>
                 </tr>
                 </thead>
@@ -415,24 +429,28 @@
                     <td>O-0001</td>
                     <td>2023-10-01</td>
                     <td>C-0001</td>
+                    <td>15</td>
                     <td>1800.00</td>
                 </tr>
                 <tr>
                     <td>O-0002</td>
                     <td>2023-10-03</td>
                     <td>C-0003</td>
+                    <td>8</td>
                     <td>270.00</td>
                 </tr>
                 <tr>
                     <td>O-0003</td>
                     <td>2023-10-04</td>
                     <td>C-0002</td>
+                    <td>12</td>
                     <td>6800.00</td>
                 </tr>
                 <tr>
                     <td>O-0004</td>
                     <td>2023-10-05</td>
                     <td>C-0001</td>
+                    <td>10</td>
                     <td>400.00</td>
                 </tr>
                 </tbody>
@@ -443,11 +461,12 @@
 <footer class="navbar bg-primary bg-gradient">
     <p>©Copyright - All Right Reserved Designed by Amidu Shamika</p>
 </footer>
+<script src="./assets/js/jquery.min.js"></script>
 <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>AOS.init();</script>
-<script src="./assets/js/jquery.min.js"></script>
+<script type="module" src="./db/DB.js"></script>
 <script type="module" src="./controller/CustomerController.js"></script>
 <script type="module" src="./controller/ItemController.js"></script>
 <script type="module" src="./controller/OrderController.js"></script>
