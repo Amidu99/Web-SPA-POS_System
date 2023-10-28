@@ -35,6 +35,16 @@ const clear_form3 = () => {
 $("#order_id").on('keypress' , ()=> { $("#customer_select").focus(); });
 $("#cash").on('keypress' , ()=> { $("#discount").focus(); });
 
+// toastr error message
+function showError(message) {
+    toastr.error(message, 'Oops...', {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "timeOut": "2500"
+    });
+}
+
 function isAvailableID(order_id) {
     let order = order_db.find(order => order.order_id === order_id);
     return !!order;
@@ -127,33 +137,37 @@ $("#cart_btns>button[type='button']").eq(0).on("click", () => {
     let total_item_qty = $("#total_item_qty").val();
     let order_item_unit_price = $("#order_item_unit_price").val();
     let order_get_item_qty = $("#order_get_item_qty").val();
-    if(order_id){
+    if(order_id) {
         if (orderIdPattern.test(order_id)) {
             if (order_item_code && order_get_item_qty) {
                 if(parseInt(order_get_item_qty)<=parseInt(total_item_qty) && parseInt(order_get_item_qty)>0) {
                     if(isAvailableCode(order_id, order_item_code)) {
-                        let order_detail = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
-                        let replace_index = temp_cart_db.findIndex(item => item.order_id === order_id && item.item_code === order_item_code);
+                        let order_detail = temp_cart_db.find(order_detail =>
+                            order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                        let replace_index = temp_cart_db.findIndex(item =>
+                            item.order_id === order_id && item.item_code === order_item_code);
                         let inCart_count = parseInt(order_detail.get_qty);
                         let new_count = inCart_count + parseInt(order_get_item_qty);
-                        temp_cart_db[replace_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
+                        temp_cart_db[replace_index] =
+                            new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
                         sub_total -= (order_item_unit_price * inCart_count);
                         sub_total += order_item_unit_price * new_count;
                         document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
                         $("#cart_btns>button[type='reset']").click();
                         loadCartItemData();
                     } else {
-                        let cart_item_obj = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, order_get_item_qty);
+                        let cart_item_obj =
+                            new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, order_get_item_qty);
                         temp_cart_db.push(cart_item_obj);
                         sub_total += order_item_unit_price * order_get_item_qty;
                         document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
                         $("#cart_btns>button[type='reset']").click();
                         loadCartItemData();
                     }
-                } else { toastr.error('Invalid Quantity!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                } else { showError('Invalid Quantity!'); }
+            } else { showError('Fields can not be empty!'); }
+        } else { showError('Invalid Order ID format!'); }
+    } else { showError('Order ID can not be empty!'); }
 });
 
 // remove item from cart
@@ -163,34 +177,38 @@ $("#cart_btns>button[type='button']").eq(1).on("click", () => {
     let order_item_description = $("#order_item_description").val();
     let order_item_unit_price = $("#order_item_unit_price").val();
     let order_get_item_qty = parseInt($("#order_get_item_qty").val());
-    if(order_id){
+    if(order_id) {
         if (orderIdPattern.test(order_id)) {
             if (order_item_code && order_get_item_qty) {
                 if(isAvailableCode(order_id, order_item_code)) {
-                    let cart_item_data = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
-                    let remove_index = temp_cart_db.findIndex(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                    let cart_item_data = temp_cart_db.find(order_detail =>
+                        order_detail.order_id === order_id && order_detail.item_code === order_item_code);
+                    let remove_index = temp_cart_db.findIndex(order_detail =>
+                        order_detail.order_id === order_id && order_detail.item_code === order_item_code);
                     if (cart_item_data) {
                         if (order_get_item_qty === parseInt(cart_item_data.get_qty)) {
-                            temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, 0);
+                            temp_cart_db[remove_index] =
+                                new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, 0);
                             sub_total -= order_item_unit_price * order_get_item_qty;
                             document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
                             $("#cart_btns>button[type='reset']").click();
                             loadCartItemData();
-                        } else if(order_get_item_qty < cart_item_data.get_qty && order_get_item_qty > 0){
+                        } else if(order_get_item_qty < cart_item_data.get_qty && order_get_item_qty > 0) {
                             let inCart_count = parseInt(cart_item_data.get_qty);
                             let new_count = inCart_count - order_get_item_qty;
-                            temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
+                            temp_cart_db[remove_index] =
+                                new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
                             sub_total -= (order_item_unit_price * inCart_count);
                             sub_total += order_item_unit_price * new_count;
                             document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
                             $("#cart_btns>button[type='reset']").click();
                             loadCartItemData();
-                        } else { toastr.error('Invalid Quantity!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"}); }
-                    } else { toastr.error('This item is not available to remove!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                } else { toastr.error('This Item is not available in this order!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"}); }
-        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                        } else { showError('Invalid Quantity!'); }
+                    } else { showError('This item is not available to remove!'); }
+                } else { showError('This Item is not available in this order!'); }
+            } else { showError('Fields can not be empty!'); }
+        } else { showError('Invalid Order ID format!'); }
+    } else { showError('Order ID can not be empty!'); }
 });
 
 $("#cart_btns>button[type='reset']").eq(0).on("click", () => {
@@ -301,7 +319,7 @@ $("#btn_place_order").on("click", () => {
     let cash = $("#cash").val();
     let discount = $("#discount").val();
     let total = sub_total - (sub_total * discount/100);
-    if(order_id){
+    if(order_id) {
         if (orderIdPattern.test(order_id)) {
             if(!isAvailableID(order_id)) {
                 if (order_customer_name) {
@@ -318,13 +336,13 @@ $("#btn_place_order").on("click", () => {
                                 clear_form3();
                                 $('#order_item_tbl_body').empty();
                                 Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000});
-                            } else { toastr.error('Insufficient cash!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                        } else { toastr.error('Invalid total!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                }else{ toastr.error('Enter valid Customer ID!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This Order ID is already exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                            } else { showError('Insufficient cash!'); }
+                        } else { showError('Invalid total!'); }
+                    } else { showError('Invalid Discount input!'); }
+                } else { showError('Enter valid Customer ID!'); }
+            } else { showError('This Order ID is already exist!'); }
+        } else { showError('Invalid Order ID format!'); }
+    } else { showError('Order ID can not be empty!'); }
 });
 
 // update order
@@ -335,7 +353,7 @@ $("#order_btns>button[type='button']").eq(0).on("click", () => {
     let order_customer_name = $("#order_customer_name").val();
     let discount = $("#discount").val();
     let total = sub_total - (sub_total * discount/100);
-    if(order_id){
+    if(order_id) {
         if (orderIdPattern.test(order_id)) {
             if(isAvailableID(order_id)) {
                 if (order_customer_name) {
@@ -354,19 +372,19 @@ $("#order_btns>button[type='button']").eq(0).on("click", () => {
                                 clear_form3();
                                 $('#order_item_tbl_body').empty();
                                 Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
-                            } else { toastr.error('No details to update!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                        } else { toastr.error('Invalid total!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                }else{ toastr.error('Enter valid Customer ID!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This Order ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                            } else { showError('No details to update!'); }
+                        } else { showError('Invalid total!'); }
+                    } else { showError('Invalid Discount input!'); }
+                } else { showError('Enter valid Customer ID!'); }
+            } else { showError('This Order ID is not exist!'); }
+        } else { showError('Invalid Order ID format!'); }
+    } else { showError('Order ID can not be empty!'); }
 });
 
 // delete order
 $("#order_btns>button[type='button']").eq(1).on("click", () => {
     let order_id = $("#order_id").val();
-    if(order_id){
+    if(order_id) {
         if (orderIdPattern.test(order_id)) {
             if(isAvailableID(order_id)) {
                 Swal.fire({width: '300px', title: 'Delete Order', text: "Are you sure you want to permanently remove this order?", icon: 'warning',
@@ -381,25 +399,25 @@ $("#order_btns>button[type='button']").eq(1).on("click", () => {
                         Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
                     }
                 })
-            } else { toastr.error('This Order ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid Order ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Order ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            } else { showError('This Order ID is not exist!'); }
+        } else { showError('Invalid Order ID format!'); }
+    } else { showError('Order ID can not be empty!'); }
 });
 
 // discount & balance
 const inputElement = document.getElementById('discount');
 inputElement.addEventListener('input', function (event) {
     let discount = event.target.value;
-    if(discountPattern.test(discount)){
+    if(discountPattern.test(discount)) {
         let total = sub_total - (sub_total * discount/100);
         document.getElementById("total").innerHTML = "Total : Rs. "+total;
         let cash = $("#cash").val();
-        if(cash>total){
+        if(cash>total) {
             let balance = cash - total;
             $("#balance").val(balance);
             $("#order_total").val(total);
         } else { Swal.fire({width: '300px', icon: 'warning', title: 'Oops...', text: 'Insufficient cash for get balance!'}); }
-    } else { toastr.error('Invalid Discount input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+    } else { showError('Invalid Discount input!'); }
 });
 
 // retrieve by table click
@@ -422,7 +440,7 @@ $("#order_tbl_body, #order_search_tbl_body").on("click", "tr", function() {
     let customer_id = $(this).find(".customer_id").text();
     let customer_data = customer_db.find(customer => customer.customer_id === customer_id);
     let customer_name;
-    if (customer_data) { customer_name = customer_data.name;}
+    if (customer_data) { customer_name = customer_data.name; }
     let discount = $(this).find(".discount").text();
     let total = $(this).find(".order_total").text();
     sub_total = total / (100 - discount) * 100;
@@ -478,3 +496,5 @@ $('#order_search_box').on('input', () => {
         $('#order_search_tbl_body').empty();
     }
 });
+
+// v1 concise & finalize
