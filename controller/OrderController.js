@@ -162,7 +162,7 @@ $("#cart_btns>button[type='button']").eq(1).on("click", () => {
     let order_item_code = $("#order_item_code").val();
     let order_item_description = $("#order_item_description").val();
     let order_item_unit_price = $("#order_item_unit_price").val();
-    let order_get_item_qty = $("#order_get_item_qty").val();
+    let order_get_item_qty = parseInt($("#order_get_item_qty").val());
     if(order_id){
         if (orderIdPattern.test(order_id)) {
             if (order_item_code && order_get_item_qty) {
@@ -170,7 +170,7 @@ $("#cart_btns>button[type='button']").eq(1).on("click", () => {
                     let cart_item_data = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
                     let remove_index = temp_cart_db.findIndex(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
                     if (cart_item_data) {
-                        if (order_get_item_qty === cart_item_data.get_qty) {
+                        if (order_get_item_qty === parseInt(cart_item_data.get_qty)) {
                             temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, 0);
                             sub_total -= order_item_unit_price * order_get_item_qty;
                             document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
@@ -178,7 +178,7 @@ $("#cart_btns>button[type='button']").eq(1).on("click", () => {
                             loadCartItemData();
                         } else if(order_get_item_qty < cart_item_data.get_qty && order_get_item_qty > 0){
                             let inCart_count = parseInt(cart_item_data.get_qty);
-                            let new_count = inCart_count - parseInt(order_get_item_qty);
+                            let new_count = inCart_count - order_get_item_qty;
                             temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
                             sub_total -= (order_item_unit_price * inCart_count);
                             sub_total += order_item_unit_price * new_count;
@@ -235,11 +235,18 @@ function updateItemQuantities() {
         let itemCode = temp_cart_db[i].item_code;
         let get_qty = temp_cart_db[i].get_qty;
         let item_data = item_db.find(item => item.item_code === itemCode);
+        let real_temp_item_data = real_temp_cart_db.find(real_item => real_item.item_code === itemCode);
         if (item_data) {
             let description = item_data.description;
             let unit_price = item_data.unit_price;
-            let qty_on_hand = item_data.qty_on_hand;
-            let updated_qty = qty_on_hand - get_qty;
+            let qty_on_hand = parseInt(item_data.qty_on_hand);
+            let updated_qty;
+            if(real_temp_item_data){
+                let real_temp_qty = parseInt(real_temp_item_data.get_qty);
+                updated_qty = (qty_on_hand + real_temp_qty) - get_qty;
+            }else{
+                updated_qty = qty_on_hand - get_qty;
+            }
             let item_obj = new Item(itemCode, description, unit_price, updated_qty);
             let index = item_db.findIndex(item => item.item_code === itemCode);
             item_db[index] = item_obj;
@@ -248,6 +255,11 @@ function updateItemQuantities() {
 }
 
 function addOrderDetails() {
+    for (let i = temp_cart_db.length - 1; i >= 0; i--) {
+        if(temp_cart_db[i].get_qty === 0){
+            temp_cart_db.splice(i, 1);
+        }
+    }
     order_details_db.push(...temp_cart_db);
     temp_cart_db = [];
 }
@@ -436,7 +448,7 @@ function getOrderDetailsToTemp(order_id) {
     }
 }
 
-var real_temp_cart_db;
+var real_temp_cart_db = [];
 function getOrderDetailsToRealTemp(order_id) {
     real_temp_cart_db = [];
     for (let i = 0; i < order_details_db.length; i++) {
