@@ -3,6 +3,7 @@
 
 body{
     margin: 0;
+    animation: fade 15000ms ease-in-out infinite;
 }
 .nav-item>a{
     color: #ffffff;
@@ -40,17 +41,49 @@ a,p,h1,h2,h3,h4,h5{
     width: 60vw;
 }
 #home{
+    background-color: rgba(207, 244, 252, 0.05);
     padding-top: 55px;
     border: none;
 }
 #homeImg{
-    width: 40vw;
+    width: 41vw;
 }
 #home_btns{
     position: relative;
 }
 .card-body>h1{
-    color: #041c96;
+    background: linear-gradient(to right, #1C77FD 20%, #51ec4c 40%, #cb50f1 60%, #e59f72 80%);
+    background-size: 200% auto;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 2500ms linear infinite;
+}
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+@keyframes fade {
+    0% {
+        background-color: rgba(203, 80, 241, 0.25);
+    }
+    20% {
+        background-color: rgba(0, 210, 255, 0.35);
+    }
+    40% {
+        background-color: rgba(229, 159, 114, 0.25);
+    }
+    60% {
+        background-color: rgba(201, 241, 63, 0.35);
+    }
+    75% {
+        background-color: rgba(28, 119, 253, 0.35);
+    }
+    100% {
+        background-color: rgba(81, 236, 76, 0.35);
+    }
 }
 #home_main_section .card-img-top{
     aspect-ratio: 16/9;
@@ -70,7 +103,7 @@ a,p,h1,h2,h3,h4,h5{
 /*Customer Section styles*/
 #customer_main_section{
     width: 86vw;
-    padding-top: 60px;
+    padding-top: 70px;
     position: relative;
     left: 0;
     right: 0;
@@ -78,7 +111,23 @@ a,p,h1,h2,h3,h4,h5{
 }
 #customer_main_section>h1{
     font-family: 'Audiowide', cursive;
-    color: #041c96;
+    color: #1C77FD;
+}
+#customer_main_section>#customer_search_section{
+    width: 60vw;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 15px 5px 0 5px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#customer_search_box{
+    padding-top: 10px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 #customer_main_section>#customer_form_section{
     width: 66vw;
@@ -86,19 +135,30 @@ a,p,h1,h2,h3,h4,h5{
     left: 0;
     right: 0;
     margin: auto;
+    padding: 2vw;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#customer_main_section>#customer_form_section>form>div>input{
+    background-color: rgba(255, 255, 255, 0.4);
 }
 #customer_main_section>#customer_table_section{
     width: 80vw;
     position: relative;
     left: 0;
     right: 0;
-    margin: auto;
+    margin: 1vw auto 0 auto;
+    padding: 2vw;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(207, 244, 252, 0.9);
 }
 
 /*Item Section styles*/
 #item_main_section{
     width: 86vw;
-    padding-top: 60px;
+    padding-top: 70px;
     position: relative;
     left: 0;
     right: 0;
@@ -106,7 +166,23 @@ a,p,h1,h2,h3,h4,h5{
 }
 #item_main_section>h1{
     font-family: 'Audiowide', cursive;
-    color: #041c96;
+    color: #1C77FD;
+}
+#item_main_section>#item_search_section{
+    width: 60vw;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 15px 5px 0 5px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#item_search_box{
+    padding-top: 10px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 #item_main_section>#item_form_section{
     width: 66vw;
@@ -114,19 +190,30 @@ a,p,h1,h2,h3,h4,h5{
     left: 0;
     right: 0;
     margin: auto;
+    padding: 2vw;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#item_main_section>#item_form_section>form>div>input{
+    background-color: rgba(255, 255, 255, 0.4);
 }
 #item_main_section>#item_table_section{
     width: 80vw;
     position: relative;
     left: 0;
     right: 0;
-    margin: auto;
+    margin: 1vw auto 0 auto;
+    padding: 2vw;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background-color: rgba(207, 244, 252, 0.9);
 }
 
 /*Order Section styles*/
 #order_main_section{
     width: 92vw;
-    padding-top: 60px;
+    padding-top: 75px;
     position: relative;
     left: 0;
     right: 0;
@@ -134,32 +221,89 @@ a,p,h1,h2,h3,h4,h5{
 }
 #order_main_section>h1{
     font-family: 'Audiowide', cursive;
-    color: #041c96;
+    color: #1C77FD;
+}
+#order_main_section>#order_search_section{
+    width: 60vw;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 15px 5px 0 5px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#order_search_box{
+    padding-top: 10px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.4);
 }
 #order_form_set{
-    width: 90vw;
+    width: 93vw;
+}
+#order_form_set>section>form>div>input{
+    background-color: rgba(255, 255, 255, 0.4);
+}
+#order_form_set>section>form>div>select{
+    background-color: rgba(255, 255, 255, 0.6);
 }
 #form1, #form2, #form3{
     padding: 2vw;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    margin-right: 0.5vw;
+    margin-left: 0.5vw;
+}
+#form1{
+    background-color: rgba(207, 244, 252, 0.25);
+}
+#form2{
+    background-color: rgba(207, 244, 252, 0.35);
+}
+#form3{
+    background-color: rgba(207, 244, 252, 0.45);
 }
 #form1>h3, #form2>h3{
     padding-bottom: 3vw;
     color: #0b5ed7;
 }
 #form3>h4{
-    color: #0b5ed7;
+    color: #0ad004;
 }
 #form3>h5{
     padding-bottom: 0.75vw;
     color: #ff253a;
 }
-#order_main_section>#table_section{
-    width: 80vw;
+#order_main_section>#table_section1{
+    width: 90vw;
     position: relative;
-    padding-top: 5vw;
+    padding: 2vw;
     left: 0;
     right: 0;
-    margin: auto;
+    background-color: rgba(207, 244, 252, 0.9);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    margin: 1vw auto 0 auto;
+}
+#order_main_section>#table_section1>h4{
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+#order_main_section>#table_section2{
+    width: 90vw;
+    position: relative;
+    padding: 2vw;
+    left: 0;
+    right: 0;
+    background-color: rgba(207, 244, 252, 0.9);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    margin: 1vw auto 0 auto;
+}
+#order_main_section>#table_section2>h4{
+    color: #0b5ed7;
+    text-decoration: underline;
 }
 @media all and (min-width: 1000px){
     #order_form_set>#form1,
@@ -168,10 +312,9 @@ a,p,h1,h2,h3,h4,h5{
         width: 30vw;
     }
 }
-
 th,label{
     font-family: 'Autour One', cursive;
-    color: #041c96;
+    color: #1C77FD;
 }
 body>footer{
     position: relative;
@@ -191,4 +334,52 @@ body>footer>p{
     letter-spacing: 0.1vw;
     color: #ffffff;
     font-size: 1.25vw;
+}
+@media all and (max-width: 375px){
+    #homeImg{
+        width: 80vw;
+    }
+    #home_button_section {
+        width: 70vw;
+    }
+    #intro{
+        font-size: 12px;
+    }
+    #customer_main_section>#customer_search_section,
+    #item_main_section>#item_search_section,
+    #order_main_section>#order_search_section {
+        width: 86vw;
+    }
+    #customer_main_section>#customer_form_section,
+    #item_main_section>#item_form_section {
+        width: 88vw;
+    }
+    #customer_main_section>#customer_table_section,
+    #item_main_section>#item_table_section {
+        width: 96vw;
+    }
+}
+@media all and (max-width: 432px){
+    #homeImg{
+        width: 75vw;
+    }
+    #home_button_section {
+        width: 65vw;
+    }
+    #intro{
+        font-size: 14px;
+    }
+    #customer_main_section>#customer_search_section,
+    #item_main_section>#item_search_section,
+    #order_main_section>#order_search_section {
+        width: 82vw;
+    }
+    #customer_main_section>#customer_form_section,
+    #item_main_section>#item_form_section {
+        width: 84vw;
+    }
+    #customer_main_section>#customer_table_section,
+    #item_main_section>#item_table_section {
+        width: 84vw;
+    }
 }
