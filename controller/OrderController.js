@@ -133,12 +133,10 @@ $("#cart_btns>button[type='button']").eq(0).on("click", () => {
                 if(parseInt(order_get_item_qty)<=parseInt(total_item_qty) && parseInt(order_get_item_qty)>0) {
                     if(isAvailableCode(order_id, order_item_code)) {
                         let order_detail = temp_cart_db.find(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
-                        let remove_index = temp_cart_db.findIndex(item => item.order_id === order_id && item.item_code === order_item_code);
+                        let replace_index = temp_cart_db.findIndex(item => item.order_id === order_id && item.item_code === order_item_code);
                         let inCart_count = parseInt(order_detail.get_qty);
                         let new_count = inCart_count + parseInt(order_get_item_qty);
-                        temp_cart_db.splice(remove_index,1);
-                        let cart_item_obj = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
-                        temp_cart_db.push(cart_item_obj);
+                        temp_cart_db[replace_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, new_count);
                         sub_total -= (order_item_unit_price * inCart_count);
                         sub_total += order_item_unit_price * new_count;
                         document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
@@ -173,7 +171,7 @@ $("#cart_btns>button[type='button']").eq(1).on("click", () => {
                     let remove_index = temp_cart_db.findIndex(order_detail => order_detail.order_id === order_id && order_detail.item_code === order_item_code);
                     if (cart_item_data) {
                         if (order_get_item_qty === cart_item_data.get_qty) {
-                            temp_cart_db.splice(remove_index, 1);
+                            temp_cart_db[remove_index] = new OrderDetails(order_id, order_item_code, order_item_description, order_item_unit_price, 0);
                             sub_total -= order_item_unit_price * order_get_item_qty;
                             document.getElementById("subTotal").innerHTML = "Sub Total : Rs. "+sub_total;
                             $("#cart_btns>button[type='reset']").click();
@@ -429,10 +427,21 @@ $("#order_tbl_body, #order_search_tbl_body").on("click", "tr", function() {
 });
 
 function getOrderDetailsToTemp(order_id) {
+    getOrderDetailsToRealTemp(order_id);
     temp_cart_db = [];
     for (let i = 0; i < order_details_db.length; i++) {
         if (order_details_db[i].order_id === order_id) {
             temp_cart_db.push({...order_details_db[i]});
+        }
+    }
+}
+
+var real_temp_cart_db;
+function getOrderDetailsToRealTemp(order_id) {
+    real_temp_cart_db = [];
+    for (let i = 0; i < order_details_db.length; i++) {
+        if (order_details_db[i].order_id === order_id) {
+            real_temp_cart_db.push({...order_details_db[i]});
         }
     }
 }
