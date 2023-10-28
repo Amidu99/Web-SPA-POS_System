@@ -21,6 +21,16 @@ function isAvailableID(customer_id) {
     return !!customer;
 }
 
+// toastr error message
+function showError(message) {
+    toastr.error(message, 'Oops...', {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "timeOut": "2500"
+    });
+}
+
 $("#customer_id").on('keypress' , ()=> { $("#customer_name").focus(); });
 $("#customer_name").on('keypress' , ()=> { $("#customer_address").focus(); });
 $("#customer_address").on('keypress' , ()=> { $("#customer_salary").focus();});
@@ -31,9 +41,9 @@ $("#customer_btns>button[type='button']").eq(0).on("click", () => {
     let name = $("#customer_name").val();
     let address = $("#customer_address").val();
     let salary = $("#customer_salary").val();
-    if(customer_id && name && address && salary){
+    if(customer_id && name && address && salary) {
         if (customerIdPattern.test(customer_id)) {
-            if(!isAvailableID(customer_id)){
+            if(!isAvailableID(customer_id)) {
                 if (namePattern.test(name)) {
                     if (addressPattern.test(address)) {
                         if (salaryPattern.test(salary)) {
@@ -42,12 +52,12 @@ $("#customer_btns>button[type='button']").eq(0).on("click", () => {
                             $("#customer_btns>button[type='button']").eq(3).click();
                             loadCustomerData();
                             Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000});
-                        } else { toastr.error('Invalid salary input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid address input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                } else { toastr.error('Invalid name input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This ID is already exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid customer ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"})}
+                        } else { showError('Invalid salary input!'); }
+                    } else { showError('Invalid address input!'); }
+                } else { showError('Invalid name input!'); }
+            } else { showError('This ID is already exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Fields can not be empty!'); }
 });
 
 // update customer
@@ -68,12 +78,12 @@ $("#customer_btns>button[type='button']").eq(1).on("click", () => {
                             $("#customer_btns>button[type='button']").eq(3).click();
                             loadCustomerData();
                             Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
-                        } else { toastr.error('Invalid salary input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid address input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                } else { toastr.error('Invalid name input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid customer ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                        } else { showError('Invalid salary input!'); }
+                    } else { showError('Invalid address input!'); }
+                } else { showError('Invalid name input!'); }
+            } else { showError('This ID is not exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Fields can not be empty!'); }
 });
 
 // delete customer
@@ -93,9 +103,9 @@ $("#customer_btns>button[type='button']").eq(2).on("click", () => {
                         Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
                     }
                 });
-            } else { toastr.error('This ID is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid customer ID format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Customer ID can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            } else { showError('This ID is not exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Customer ID can not be empty!'); }
 });
 
 // reset form
@@ -147,4 +157,4 @@ $('#customer_search_box').on('input', () => {
     }
 });
 
-// v1 finalize
+// v1 concise & finalize
