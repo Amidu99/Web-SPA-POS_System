@@ -21,6 +21,16 @@ function isAvailableID(item_code) {
     return !!item;
 }
 
+// toastr error message
+function showError(message) {
+    toastr.error(message, 'Oops...', {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "timeOut": "2500"
+    });
+}
+
 $("#item_code").on('keypress' , ()=> { $("#description").focus(); });
 $("#description").on('keypress' , ()=> { $("#unit_price").focus(); });
 $("#unit_price").on('keypress' , ()=> { $("#item_qty").focus();});
@@ -31,9 +41,9 @@ $("#item_btns>button[type='button']").eq(0).on("click", () => {
     let description = $("#description").val();
     let unit_price = $("#unit_price").val();
     let qty_on_hand = $("#item_qty").val();
-    if(item_code && description && unit_price && qty_on_hand){
+    if(item_code && description && unit_price && qty_on_hand) {
         if (itemCodePattern.test(item_code)) {
-            if(!isAvailableID(item_code)){
+            if(!isAvailableID(item_code)) {
                 if (descriptionPattern.test(description)) {
                     if (pricePattern.test(unit_price)) {
                         if (qtyPattern.test(qty_on_hand)) {
@@ -42,12 +52,12 @@ $("#item_btns>button[type='button']").eq(0).on("click", () => {
                         $("#item_btns>button[type='button']").eq(3).click();
                         loadItemData();
                             Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000});
-                        } else { toastr.error('Invalid quantity input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid price input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                } else { toastr.error('Invalid description!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This Code is already exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid item code format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    }else{ toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                        } else { showError('Invalid quantity input!'); }
+                    } else { showError('Invalid price input!'); }
+                } else { showError('Invalid description!'); }
+            } else { showError('This Code is already exist!'); }
+        } else {  showError('Invalid item code format!'); }
+    } else { showError('Fields can not be empty!'); }
 });
 
 // update item
@@ -68,18 +78,18 @@ $("#item_btns>button[type='button']").eq(1).on("click", () => {
                             $("#item_btns>button[type='button']").eq(3).click();
                             loadItemData();
                             Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
-                        } else { toastr.error('Invalid quantity input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                    } else { toastr.error('Invalid price input!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-                } else { toastr.error('Invalid description!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-            } else { toastr.error('This Code is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid item code format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    } else { toastr.error('Fields can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+                        } else { showError('Invalid quantity input!'); }
+                    } else { showError('Invalid price input!'); }
+                } else { showError('Invalid description!'); }
+            } else { showError('This Code is not exist!'); }
+        } else {  showError('Invalid item code format!'); }
+    } else { showError('Fields can not be empty!'); }
 });
 
 // delete item
 $("#item_btns>button[type='button']").eq(2).on("click", () => {
     let item_code = $("#item_code").val();
-    if(item_code){
+    if(item_code) {
         if (itemCodePattern.test(item_code)) {
             if(isAvailableID(item_code)) {
                 Swal.fire({width: '300px', title: 'Delete Item', text: "Are you sure you want to permanently remove this item?", icon: 'warning',
@@ -93,9 +103,9 @@ $("#item_btns>button[type='button']").eq(2).on("click", () => {
                         Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
                     }
                 })
-            } else { toastr.error('This Code is not exist!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-        } else { toastr.error('Invalid item code format!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
-    } else { toastr.error('Item Code can not be empty!','Oops...', {"closeButton": true, "progressBar": true, "positionClass": "toast-top-center", "timeOut": "2500"});}
+            } else { showError('This Code is not exist!'); }
+        } else {  showError('Invalid item code format!'); }
+    } else { showError('Item Code can not be empty!'); }
 });
 
 // reset form
@@ -147,4 +157,4 @@ $('#item_search_box').on('input', () => {
 });
 
 
-// v1 finalize
+// v1 concise & finalize
