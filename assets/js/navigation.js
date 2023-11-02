@@ -13,18 +13,28 @@ $("#customer_nav, #customer_nav_btn").on('click', () => {
     $('#customer_main_section').css('display', 'block');
     $('#item_main_section').css('display', 'none');
     $('#order_main_section').css('display', 'none');
+    if(!$("#customer_id").val()){
+        $("#customer_btns>button[type='button']").eq(3).click();
+    }
 });
 $("#item_nav, #item_nav_btn").on('click', () => {
     $('#home_section').css('display', 'none');
     $('#customer_main_section').css('display', 'none');
     $('#item_main_section').css('display', 'block');
     $('#order_main_section').css('display', 'none');
+    if(!$("#item_code").val()){
+        $("#item_btns>button[type='button']").eq(3).click();
+    }
 });
 $("#order_nav, #order_nav_btn").on('click', () => {
     $('#home_section').css('display', 'none');
     $('#customer_main_section').css('display', 'none');
     $('#item_main_section').css('display', 'none');
     $('#order_main_section').css('display', 'block');
+    if(!$("#order_id").val()){
+        $("#order_btns>button[type='button']").eq(2).click();
+        $("#cart_btns>button[type='reset']").eq(0).click();
+    }
 });
 const imageSources = [
     './assets/images/welcome-img1.png',
